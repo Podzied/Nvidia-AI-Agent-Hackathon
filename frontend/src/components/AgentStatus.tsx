@@ -16,16 +16,16 @@ export default function AgentStatus() {
     switch (status) {
       case 'active':
       case 'trained':
-        return <CheckCircle className="w-4 h-4 text-green-500" />
+        return <CheckCircle className="w-3 h-3 text-green-500" />
       case 'inactive':
       case 'untrained':
-        return <XCircle className="w-4 h-4 text-red-500" />
+        return <XCircle className="w-3 h-3 text-red-500" />
       case 'training':
-        return <Clock className="w-4 h-4 text-yellow-500" />
+        return <Clock className="w-3 h-3 text-yellow-500" />
       case 'error':
-        return <XCircle className="w-4 h-4 text-red-500" />
+        return <XCircle className="w-3 h-3 text-red-500" />
       default:
-        return <XCircle className="w-4 h-4 text-gray-500" />
+        return <XCircle className="w-3 h-3 text-gray-500" />
     }
   }
 
@@ -66,18 +66,18 @@ export default function AgentStatus() {
   }
 
   return (
-    <div className="glass-effect rounded-xl p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <Zap className="w-5 h-5 text-blue-600" />
-        <h2 className="text-xl font-semibold">Agent Status</h2>
+    <div className="glass-effect rounded-xl p-4">
+      <div className="flex items-center gap-2 mb-3">
+        <Zap className="w-4 h-4 text-blue-600" />
+        <h2 className="text-sm font-semibold">AI Agents Status</h2>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {/* PII Scanner Agent */}
-        <div className="flex items-center gap-3 p-3 bg-white/50 rounded-lg">
-          <Cpu className="w-5 h-5 text-blue-600" />
-          <div className="flex-1">
-            <div className="text-sm font-medium">PII Scanner</div>
+        <div className="flex items-center gap-2 p-2 bg-white/50 rounded-lg">
+          <Cpu className="w-4 h-4 text-blue-600" />
+          <div className="flex-1 min-w-0">
+            <div className="text-xs font-medium truncate">Scanner</div>
             <div className="flex items-center gap-1">
               {getStatusIcon(agentStatus.pii_scanner)}
               <span className={`text-xs ${getStatusColor(agentStatus.pii_scanner)}`}>
@@ -88,10 +88,10 @@ export default function AgentStatus() {
         </div>
 
         {/* Compliance Enforcer Agent */}
-        <div className="flex items-center gap-3 p-3 bg-white/50 rounded-lg">
-          <Shield className="w-5 h-5 text-green-600" />
-          <div className="flex-1">
-            <div className="text-sm font-medium">Compliance</div>
+        <div className="flex items-center gap-2 p-2 bg-white/50 rounded-lg">
+          <Shield className="w-4 h-4 text-green-600" />
+          <div className="flex-1 min-w-0">
+            <div className="text-xs font-medium truncate">Compliance</div>
             <div className="flex items-center gap-1">
               {getStatusIcon(agentStatus.compliance_enforcer)}
               <span className={`text-xs ${getStatusColor(agentStatus.compliance_enforcer)}`}>
@@ -102,10 +102,10 @@ export default function AgentStatus() {
         </div>
 
         {/* Coordinator Agent */}
-        <div className="flex items-center gap-3 p-3 bg-white/50 rounded-lg">
-          <Zap className="w-5 h-5 text-purple-600" />
-          <div className="flex-1">
-            <div className="text-sm font-medium">Coordinator</div>
+        <div className="flex items-center gap-2 p-2 bg-white/50 rounded-lg">
+          <Zap className="w-4 h-4 text-purple-600" />
+          <div className="flex-1 min-w-0">
+            <div className="text-xs font-medium truncate">Coordinator</div>
             <div className="flex items-center gap-1">
               {getStatusIcon(agentStatus.coordinator)}
               <span className={`text-xs ${getStatusColor(agentStatus.coordinator)}`}>
@@ -116,10 +116,10 @@ export default function AgentStatus() {
         </div>
 
         {/* Neural Network */}
-        <div className="flex items-center gap-3 p-3 bg-white/50 rounded-lg">
-          <Brain className="w-5 h-5 text-indigo-600" />
-          <div className="flex-1">
-            <div className="text-sm font-medium">Neural Net</div>
+        <div className="flex items-center gap-2 p-2 bg-white/50 rounded-lg">
+          <Brain className="w-4 h-4 text-indigo-600" />
+          <div className="flex-1 min-w-0">
+            <div className="text-xs font-medium truncate">Neural Net</div>
             <div className="flex items-center gap-1">
               {getStatusIcon(agentStatus.neural_network)}
               <span className={`text-xs ${getStatusColor(agentStatus.neural_network)}`}>

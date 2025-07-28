@@ -36,6 +36,8 @@ enum Commands {
     Demo,
     /// Run chatbot compliance demo
     ChatbotDemo,
+    /// Start web server for API endpoints
+    Serve,
 }
 
 #[tokio::main]
@@ -144,6 +146,11 @@ async fn main() -> anyhow::Result<()> {
                 println!("  User Messages: {}", scenario.messages.iter().filter(|m| m.is_user_message).count());
                 println!("  Risk Level: {:?}", scenario.risk_level);
             }
+        }
+        
+        Commands::Serve => {
+            println!("🌐 Starting web server...");
+            pii_compliance_agent::web_server::start_web_server().await?;
         }
     }
     

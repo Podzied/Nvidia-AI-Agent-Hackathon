@@ -107,15 +107,13 @@ impl PiiClassifier {
         ]
     }
     
-    pub fn save(&self, path: &str) -> Result<()> {
-        // Simplified save for hackathon demo
-        println!("Model would be saved to {}", path);
+    pub fn save(&self, _path: &str) -> Result<()> {
+        // No-op for web server - no file system access needed
         Ok(())
     }
     
-    pub fn load(path: &str) -> Result<Self> {
-        // Simplified load for hackathon demo
-        println!("Model would be loaded from {}", path);
+    pub fn load(_path: &str) -> Result<Self> {
+        // No-op for web server - always return a new instance
         Ok(Self::new())
     }
 } 

@@ -1,9 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import PiiScanner from '@/components/PiiScanner'
-import ResultsDisplay from '@/components/ResultsDisplay'
-import ComplianceScore from '@/components/ComplianceScore'
+import ChatInterface from '@/components/ChatInterface'
 import AgentStatus from '@/components/AgentStatus'
 import { ScanResponse } from '@/lib/types'
 
@@ -12,41 +10,30 @@ export default function Home() {
   const [isScanning, setIsScanning] = useState(false)
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       {/* Header */}
-      <div className="text-center mb-12">
+      <div className="text-center py-8">
         <h1 className="text-4xl font-bold gradient-text mb-4">
-          PII Compliance AI Agent
+          AI Assistant
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          Neural network-powered PII detection and compliance enforcement
+          Your intelligent conversation partner with built-in privacy protection
         </p>
       </div>
 
       {/* Agent Status */}
-      <div className="mb-8">
+      <div className="max-w-4xl mx-auto px-4 mb-6">
         <AgentStatus />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Scanner Section */}
-        <div className="space-y-6">
-          <PiiScanner 
-            onScan={setScanResults}
-            isScanning={isScanning}
-            setIsScanning={setIsScanning}
-          />
-        </div>
-
-        {/* Results Section */}
-        <div className="space-y-6">
-          {scanResults && (
-            <>
-              <ResultsDisplay results={scanResults} />
-              <ComplianceScore results={scanResults} />
-            </>
-          )}
-        </div>
+      {/* Chat Interface */}
+      <div className="max-w-4xl mx-auto px-4">
+        <ChatInterface 
+          onScan={setScanResults}
+          isScanning={isScanning}
+          setIsScanning={setIsScanning}
+          scanResults={scanResults}
+        />
       </div>
     </div>
   )

@@ -2,57 +2,31 @@ use crate::types::{AgentContext, AgentMessage, ComplianceResult, MessageType};
 use anyhow::Result;
 use async_trait::async_trait;
 use serde_json::json;
-use std::process::Command;
 
 #[derive(Clone)]
 pub struct LlmReasonerAgent {
     agent_id: String,
-    python_script_path: String,
 }
 
 impl LlmReasonerAgent {
     pub fn new() -> Self {
         Self {
             agent_id: "llm-reasoner-001".to_string(),
-            python_script_path: "langchain_reasoner_mock.py".to_string(),
         }
     }
     
-    pub fn with_script_path(script_path: String) -> Self {
-        Self {
-            agent_id: "llm-reasoner-001".to_string(),
-            python_script_path: script_path,
-        }
-    }
-    
-    pub fn call_langchain_reasoner(&self, compliance_result: &ComplianceResult) -> Result<String> {
-        // Serialize compliance result to JSON
-        let input_json = serde_json::to_string(compliance_result)?;
+    pub fn generate_explanation(&self, compliance_result: &ComplianceResult) -> String {
+        let pii_count = compliance_result.detected_pii.len();
+        let compliance_score = compliance_result.compliance_score;
         
-        // Call Python script
-        let mut child = Command::new("python")
-            .arg(&self.python_script_path)
-            .env("MOCK_MODE", "true") // Use mock mode for now
-            .current_dir("python")
-            .stdin(std::process::Stdio::piped())
-            .stdout(std::process::Stdio::piped())
-            .stderr(std::process::Stdio::piped())
-            .spawn()?;
-        
-        // Write input to stdin
-        if let Some(mut stdin) = child.stdin.take() {
-            use std::io::Write;
-            stdin.write_all(input_json.as_bytes())?;
-        }
-        
-        let output = child.wait_with_output()?;
-        
-        if output.status.success() {
-            let response: serde_json::Value = serde_json::from_slice(&output.stdout)?;
-            Ok(response["explanation"].as_str().unwrap_or("No explanation provided").to_string())
+        if pii_count == 0 {
+            "✅ No PII detected in the text. This content appears to be safe for sharing.".to_string()
+        } else if compliance_score >= 0.8 {
+            format!("⚠️ Found {} PII item(s) but with good compliance score ({:.1}%). Consider reviewing the detected information.", 
+                   pii_count, compliance_score * 100.0)
         } else {
-            let error_msg = String::from_utf8_lossy(&output.stderr);
-            Err(anyhow::anyhow!("Python script failed: {}", error_msg))
+            format!("🚨 Found {} PII item(s) with low compliance score ({:.1}%). Immediate action recommended to protect sensitive information.", 
+                   pii_count, compliance_score * 100.0)
         }
     }
 }
@@ -67,8 +41,8 @@ impl super::Agent for LlmReasonerAgent {
                     message.payload["compliance_result"].clone()
                 ).unwrap_or_default();
                 
-                // Get LLM explanation
-                let explanation = self.call_langchain_reasoner(&compliance_result)?;
+                // Generate explanation
+                let explanation = self.generate_explanation(&compliance_result);
                 
                 let result = AgentMessage {
                     agent_id: self.agent_id.clone(),
