@@ -32,6 +32,61 @@ pub struct ComplianceResult {
     pub recommendations: Vec<String>,
 }
 
+// New: Chatbot-specific types
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct ChatMessage {
+    pub user_id: String,
+    pub session_id: String,
+    pub message_id: String,
+    pub timestamp: chrono::DateTime<chrono::Utc>,
+    pub content: String,
+    pub is_user_message: bool, // true for user, false for bot
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ChatSession {
+    pub session_id: String,
+    pub user_id: String,
+    pub messages: Vec<ChatMessage>,
+    pub compliance_violations: Vec<ComplianceViolation>,
+    pub risk_level: RiskLevel,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ComplianceViolation {
+    pub violation_type: ViolationType,
+    pub severity: Severity,
+    pub message: String,
+    pub timestamp: chrono::DateTime<chrono::Utc>,
+    pub pii_detected: Vec<PiiDetection>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
+pub enum ViolationType {
+    PiiExposure,
+    DataRetention,
+    ConsentMissing,
+    UnauthorizedAccess,
+    DataMinimization,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
+pub enum Severity {
+    Low,
+    Medium,
+    High,
+    Critical,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
+pub enum RiskLevel {
+    Safe,
+    Low,
+    Medium,
+    High,
+    Critical,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TrainingData {
     pub text: String,
@@ -53,6 +108,9 @@ pub enum MessageType {
     ComplianceEnforcementRequest,
     ComplianceEnforcementResult,
     LlmReasoningResult,
+    ChatMessageReceived,
+    ChatSessionUpdate,
+    ComplianceViolationAlert,
     Error,
 }
 
